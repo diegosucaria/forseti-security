@@ -93,6 +93,7 @@ GCP_TYPE_LIST = [
     'kubernetes_pod',
     'kubernetes_role',
     'kubernetes_rolebinding',
+    'kubernetes_service',
     'lien',
     'network',
     'organization',
@@ -672,6 +673,7 @@ class InventoryImporter(object):
             'kubernetes_pod': self._convert_kubernetes_pod,
             'kubernetes_role': self._convert_kubernetes_role,
             'kubernetes_rolebinding': self._convert_kubernetes_rolebinding,
+            'kubernetes_service': self._convert_kubernetes_service,
             'lien': self._convert_lien,
             'network': self._convert_computeengine_resource,
             'organization': self._convert_organization,
@@ -959,6 +961,17 @@ class InventoryImporter(object):
         self._convert_resource(kubernetes_rolebinding,
                                cached=False,
                                display_key='kubernetesRoleBinding')
+
+    def _convert_kubernetes_service(self, kubernetes_service):
+        """Convert a Kubernetes Service resource to a database object.
+
+        Args:
+            kubernetes_service (dict): A Kubernetes Service resource to
+            store.
+        """
+        self._convert_resource(kubernetes_service,
+                               cached=False,
+                               display_key='kubernetesService')
 
     def _convert_lien(self, lien):
         """Convert a lien to a database object.
