@@ -1593,6 +1593,7 @@ class KubernetesCluster(resource_class_factory('kubernetes_cluster',
 class KubernetesNode(k8_resource_class_factory('kubernetes_node')):
     """The Resource implementation for Kubernetes Node."""
 
+
 class KubernetesService(k8_resource_class_factory('kubernetes_service')):
     """The Resource implementation for Kubernetes Service."""
 
@@ -2625,6 +2626,29 @@ class KubernetesServiceIterator(ResourceIterator):
             LOGGER.debug(e)
 
 
+class KubernetesServiceIterator(ResourceIterator):
+    """The Resource iterator implementation for KubernetesService"""
+
+    def iter(self):
+        """Resource iterator.
+
+        Yields:
+            Resource: KubernetesCluster created
+        """
+        gcp = self.client
+        try:
+            for data, metadata in gcp.iter_kubernetes_services(
+                    project_id=self.resource.parent().parent()['projectId'],
+                    zone=self.resource.parent()['zone'],
+                    cluster=self.resource.parent()['name'],
+                    namespace=self.resource['metadata']['name']):
+                yield FACTORIES['kubernetes_service'].create_new(
+                    data, metadata=metadata)
+        except ResourceNotSupported as e:
+            # API client doesn't support this resource, ignore.
+            LOGGER.debug(e)
+
+
 class KubernetesPodIterator(ResourceIterator):
     """The Resource iterator implementation for KubernetesPod"""
 
@@ -3303,6 +3327,7 @@ FACTORIES = {
             KubernetesPodIterator,
             KubernetesRoleIterator,
             KubernetesRoleBindingIterator,
+            KubernetesServiceIterator
         ]}),
 
     'kubernetes_node': ResourceFactory({
@@ -3313,6 +3338,11 @@ FACTORIES = {
     'kubernetes_pod': ResourceFactory({
         'dependsOn': ['kubernetes_namespace'],
         'cls': KubernetesPod,
+        'contains': []}),
+
+    'kubernetes_service': ResourceFactory({
+        'dependsOn': ['kubernetes_namespace'],
+        'cls': KubernetesService,
         'contains': []}),
 
     'kubernetes_role': ResourceFactory({

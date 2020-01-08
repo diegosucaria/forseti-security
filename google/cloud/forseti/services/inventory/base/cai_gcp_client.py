@@ -1002,26 +1002,6 @@ class CaiApiClientImpl(gcp.ApiClientImpl):
         for node in resources:
             yield node
 
-    def iter_kubernetes_services(self, project_id, zone, cluster):
-        """Iterate k8s services in a cluster from Cloud Asset data.
-
-        Args:
-            project_id (str): id of the project to query.
-            zone (str): The zone the cluster is in.
-            cluster (str): The cluster name.
-
-        Yields:
-            dict: Generator of services.
-        """
-        resources = self.dao.iter_cai_assets(
-            ContentTypes.resource,
-            'k8s.io/Service',
-            '//container.googleapis.com/projects/{}/zones/{}/clusters/{}'
-            .format(project_id, zone, cluster),
-            self.engine)
-        for service in resources:
-            yield service
-
     def iter_kubernetes_pods(self, project_id, zone, cluster, namespace):
         """Iterate k8s pods in a namespace from Cloud Asset data.
 
@@ -1043,6 +1023,28 @@ class CaiApiClientImpl(gcp.ApiClientImpl):
         for pod in resources:
             yield pod
 
+    def iter_kubernetes_services(self, project_id, zone, cluster, namespace):
+        """Iterate k8s services in a namespace from Cloud Asset data.
+
+        Args:
+            project_id (str): id of the project to query.
+            zone (str): The zone the cluster is in.
+            cluster (str): The cluster name.;
+            namespace (str): The namespace name.
+
+        Yields:
+            dict: Generator of pods.
+        """
+        resources = self.dao.iter_cai_assets(
+            ContentTypes.resource,
+            'k8s.io/Service',
+            '//container.googleapis.com/projects/{}/locations/{}/clusters/{}/k8s/'
+            'namespaces/{}'.format(project_id, zone, cluster, namespace),
+            self.engine)
+        a = list(resources)
+        for service in resources:
+            yield service
+
     def iter_kubernetes_namespaces(self, project_id, zone, cluster):
         """Iterate k8s namespaces in a cluster from Cloud Asset data.
 
@@ -1063,25 +1065,6 @@ class CaiApiClientImpl(gcp.ApiClientImpl):
         for namespace in resources:
             yield namespace
 
-    def iter_kubernetes_namespaces(self, project_id, zone, cluster):
-        """Iterate k8s namespaces in a cluster from Cloud Asset data.
-
-        Args:
-            project_id (str): id of the project to query.
-            zone (str): The zone the cluster is in.
-            cluster (str): The cluster name.
-
-        Yields:
-            dict: Generator of namespaces.
-        """
-        resources = self.dao.iter_cai_assets(
-            ContentTypes.resource,
-            'k8s.io/Namespace',
-            '//container.googleapis.com/projects/{}/zones/{}/clusters/{}'
-            .format(project_id, zone, cluster),
-            self.engine)
-        for namespace in resources:
-            yield namespace
 
     def iter_kubernetes_roles(self, project_id, zone, cluster, namespace):
         """Iterate k8s roles in a namespace from Cloud Asset data.

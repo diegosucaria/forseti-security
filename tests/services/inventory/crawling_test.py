@@ -594,6 +594,7 @@ class CloudAssetCrawlerTest(CrawlerBase):
             'kubernetes_namespace': {'resource': 1},
             'kubernetes_node': {'resource': 1},
             'kubernetes_pod': {'resource': 1},
+            'kubernetes_service': {'resource': 1},
             'kubernetes_role': {'resource': 1},
             'kubernetes_rolebinding': {'resource': 1},
             'pubsub_subscription': {'iam_policy': 1, 'resource': 1},
