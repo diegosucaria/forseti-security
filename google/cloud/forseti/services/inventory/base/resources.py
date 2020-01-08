@@ -2616,28 +2616,6 @@ class KubernetesServiceIterator(ResourceIterator):
         gcp = self.client
         try:
             for data, metadata in gcp.iter_kubernetes_services(
-                    project_id=self.resource.parent()['projectId'],
-                    zone=self.resource['zone'],
-                    cluster=self.resource['name']):
-                yield FACTORIES['kubernetes_service'].create_new(
-                    data, metadata=metadata)
-        except ResourceNotSupported as e:
-            # API client doesn't support this resource, ignore.
-            LOGGER.debug(e)
-
-
-class KubernetesServiceIterator(ResourceIterator):
-    """The Resource iterator implementation for KubernetesService"""
-
-    def iter(self):
-        """Resource iterator.
-
-        Yields:
-            Resource: KubernetesCluster created
-        """
-        gcp = self.client
-        try:
-            for data, metadata in gcp.iter_kubernetes_services(
                     project_id=self.resource.parent().parent()['projectId'],
                     zone=self.resource.parent()['zone'],
                     cluster=self.resource.parent()['name'],

@@ -1038,10 +1038,9 @@ class CaiApiClientImpl(gcp.ApiClientImpl):
         resources = self.dao.iter_cai_assets(
             ContentTypes.resource,
             'k8s.io/Service',
-            '//container.googleapis.com/projects/{}/locations/{}/clusters/{}/k8s/'
+            '//container.googleapis.com/projects/{}/zones/{}/clusters/{}/k8s/'
             'namespaces/{}'.format(project_id, zone, cluster, namespace),
             self.engine)
-        a = list(resources)
         for service in resources:
             yield service
 
@@ -1064,7 +1063,6 @@ class CaiApiClientImpl(gcp.ApiClientImpl):
             self.engine)
         for namespace in resources:
             yield namespace
-
 
     def iter_kubernetes_roles(self, project_id, zone, cluster, namespace):
         """Iterate k8s roles in a namespace from Cloud Asset data.
