@@ -1008,7 +1008,7 @@ class CaiApiClientImpl(gcp.ApiClientImpl):
         Args:
             project_id (str): id of the project to query.
             zone (str): The zone the cluster is in.
-            cluster (str): The cluster name.;
+            cluster (str): The cluster name.
             namespace (str): The namespace name.
 
         Yields:
@@ -1029,11 +1029,11 @@ class CaiApiClientImpl(gcp.ApiClientImpl):
         Args:
             project_id (str): id of the project to query.
             zone (str): The zone the cluster is in.
-            cluster (str): The cluster name.;
+            cluster (str): The cluster name.
             namespace (str): The namespace name.
 
         Yields:
-            dict: Generator of pods.
+            dict: Generator of services.
         """
         resources = self.dao.iter_cai_assets(
             ContentTypes.resource,

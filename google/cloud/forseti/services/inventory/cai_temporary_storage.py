@@ -222,12 +222,18 @@ class CaiTemporaryStore(BASE):
             # Strip k8s/namespaces/{NAMESPACE} off name to get the parent.
             return '/'.join(asset['name'].split('/')[:-3])
 
-        elif asset['asset_type'] == 'k8s.io/Pod':
+        elif asset['asset_type'] in ('k8s.io/Pod', 'k8s.io/Service'):
             # "name":"//container.googleapis.com/projects/test-project/zones/
             # us-central1-b/clusters/test-cluster/k8s/namespaces/
             # test-namespace/pods/test-pod"
             #
             # Strip pods/{POD} off name to get the parent.
+            #
+            # "name":"//container.googleapis.com/projects/project1/locations/
+            # us-west1/clusters/cluster-1/k8s/namespaces/default/services/
+            # test-service"
+            #
+            # Strip services/{SERVICE} off name to get the parent.
             return '/'.join(asset['name'].split('/')[:-2])
 
         elif asset['asset_type'] in ('rbac.authorization.k8s.io/Role',
