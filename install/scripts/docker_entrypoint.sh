@@ -50,6 +50,8 @@ SQL_PORT=3306
 SERVER_HOST=127.0.0.1
 SERVER_PORT=${PORT:=50051}
 
+CONFIG_FILE_PATH="/forseti-security/forseti_conf_server.yaml"
+
 # Check if the k8s cloud sql proxy environment variables have been set, if so
 # overwrite our cloud sql variables with their contents
 if [[ !(-z ${CLOUDSQLPROXY_SERVICE_HOST}) ]]; then
@@ -104,6 +106,10 @@ while [[ "$1" != "" ]]; do
             shift
             SERVER_PORT=$1
             ;;
+         --config_file_path )
+            shift
+            CONFIG_FILE_PATH=$1
+            ;;
     esac
     shift # Move remaining args down 1 position
 done
@@ -114,7 +120,7 @@ start_server(){
     --endpoint ${SERVER_HOST}:${SERVER_PORT} \
     --forseti_db "mysql+pymysql://${SQL_DB_USER}:${SQL_DB_PASSWORD}@${SQL_HOST}:${SQL_PORT}/${SQL_DATABASE_NAME}" \
     --services ${SERVICES} \
-    --config_file_path "/forseti-security/forseti_conf_server.yaml" \
+    --config_file_path ${CONFIG_FILE_PATH} \
     --log_level=${LOG_LEVEL} \
     --enable_console_log
 }
